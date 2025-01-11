@@ -65,27 +65,27 @@ $(document).ready(function(){
 </script>
 
 <?php
-include "user_foto.php";
+include "upload_foto.php";
 
 //jika tombol simpan diklik
 if (isset($_POST['simpan'])) {
-    $username = $_SESSION['username'];
-    $password = $_SESSION['password'];
-    $foto = '';
-    $nama_gambar = $_FILES['foto']['name'];
+    $username = $_POST['judul']; // Username diambil dari input form
+    $password = $_POST['isi'];   // Password diambil dari input form
+    $foto = ''; // Inisialisasi variabel foto
 
-    //jika ada file yang dikirim  
+    $nama_gambar = $_FILES['gambar']['name'];
+
+    // Jika ada file gambar yang dikirimkan
     if ($nama_gambar != '') {
-		    //panggil function upload_foto untuk cek spesifikasi file yg dikirimkan user
-		    //function ini memiliki 2 keluaran yaitu status dan message
-        $cek_upload = upload_foto($_FILES["foto"]);
+        // Panggil function upload_foto untuk memverifikasi file
+        $cek_upload = upload_foto($_FILES["gambar"]);
 
-				//cek status true/false
+        // Cek status upload
         if ($cek_upload['status']) {
-		        //jika true maka message berisi nama file gambar
-            $gambar = $cek_upload['message'];
+            // Jika sukses, set $foto menjadi nama gambar yang diupload
+            $foto = $cek_upload['message'];
         } else {
-		        //jika true maka message berisi pesan error, tampilkan dalam alert
+            // Jika gagal, tampilkan pesan error
             echo "<script>
                 alert('" . $cek_upload['message'] . "');
                 document.location='admin.php?page=user';
@@ -94,35 +94,10 @@ if (isset($_POST['simpan'])) {
         }
     }
 
-		//cek apakah ada id yang dikirimkan dari form
-    if (isset($_POST['id'])) {
-        //jika ada id,    lakukan update data dengan id tersebut
-        $id = $_POST['id'];
-
-        if ($nama_foto == '') {
-            //jika tidak ganti gambar
-            $gambar = $_POST['foto_lama'];
-        } else {
-            //jika ganti gambar, hapus gambar lama
-            unlink("img/" . $_POST['foto_lama']);
-        }
-
-        $stmt = $conn->prepare("UPDATE user 
-                                SET 
-                                username = ?,
-                                password = ?
-                                WHERE id = ?");
-
-        $stmt->bind_param("sssssi", $foto, $password, $username, $id);
-        $simpan = $stmt->execute();
-    } else {
-		    //jika tidak ada id, lakukan insert data baru
-        $stmt = $conn->prepare("INSERT INTO article (foto,username)
-                                VALUES (?,?)");
-
-        $stmt->bind_param("sssss", $foto, $username);
-        $simpan = $stmt->execute();
-    }
+    // Proses insert data ke database
+    $stmt = $conn->prepare("INSERT INTO user (foto, username, password) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $foto, $username, $password); // Bind parameter
+    $simpan = $stmt->execute();
 
     if ($simpan) {
         echo "<script>
