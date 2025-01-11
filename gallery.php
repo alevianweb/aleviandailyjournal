@@ -45,6 +45,10 @@
                         <input type="text" class="form-control" name="judul" placeholder="Tuliskan Judul gallery" required>
                     </div>
                     <div class="mb-3">
+                        <label for="floatingTextarea2">Isi</label>
+                        <textarea class="form-control" placeholder="Tuliskan Isi gallery" name="isi" required></textarea>
+                    </div>
+                    <div class="mb-3">
                         <label for="formGroupExampleInput2" class="form-label">Gambar</label>
                         <input type="file" class="form-control" name="gambar">
                     </div>
