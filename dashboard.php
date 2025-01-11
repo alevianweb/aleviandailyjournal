@@ -10,6 +10,10 @@ $jumlah_article = $hasil1->num_rows;
 $sql2 = "SELECT * FROM gallery ORDER BY tanggal DESC";
 $hasil2 = $conn->query($sql2);
 
+$sql3 = "SELECT * FROM user";
+$hasil3 = $conn->query($sql3);
+
+
 //menghitung jumlah baris data gallery
 $jumlah_gallery = $hasil2->num_rows;
 ?>
